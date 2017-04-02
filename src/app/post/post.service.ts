@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Headers, RequestOptions } from '@angular/http';
+import { Headers } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -12,8 +12,14 @@ export class PostService {
 
     constructor ( private http: Http ) {}
 
-    getPosts(): Observable<Post[]> {
+    getAllPosts(): Observable<Post[]> {
         return this.http.get(this.postsUrl)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getPost(id: number): Observable<Post[]> {
+        return this.http.get(`${this.postsUrl}\/${id}`)
             .map(this.extractData)
             .catch(this.handleError);
     }

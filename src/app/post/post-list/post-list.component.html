@@ -1,8 +1,9 @@
 <pre>
     <h1>List</h1>
 </pre>
-<dl>
-    <dd *ngFor="let post of postsList">
-        {{ post.id }} {{ post.title }}
-    </dd>
-</dl>
+
+<div class="list-group">
+    <a *ngFor="let post of postsList" class="list-group-item" [routerLink]="['/', post.id]">
+      {{ post.id }} {{ post.title }}
+    </a>
+</div>

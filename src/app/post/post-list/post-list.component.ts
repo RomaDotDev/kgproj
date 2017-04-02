@@ -10,7 +10,6 @@ import { Post } from '../post.model';
     styleUrls: ['./post-list.component.css']
 })
 
-
 export class PostListComponent implements OnInit, OnDestroy {
     postsList: Post[] = [];
 
@@ -31,7 +30,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
     getPostsList() {
         if (!this.postsListSubscription) {
-            this.postsListSubscription = this.postService.getPosts()
+            this.postsListSubscription = this.postService.getAllPosts()
                 .subscribe( data => this.postsList = data );
         }
     }
