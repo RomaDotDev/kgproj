@@ -7,6 +7,7 @@ import { PostComponent } from './post.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
 
+import { TrackerService } from './tracker.service';
 import { PostService } from './post.service';
 
 @NgModule({
@@ -20,7 +21,8 @@ import { PostService } from './post.service';
       PostDetailComponent
   ],
   providers: [
-      PostService
+      PostService,
+      TrackerService
   ],
   exports: [
       PostComponent
