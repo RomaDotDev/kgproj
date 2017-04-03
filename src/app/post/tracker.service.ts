@@ -38,36 +38,28 @@ export class TrackerService {
         console.log(from, current);
         let dateString: string;
         let id: number = 1;
+        let newDate: number;
 
         while (current < end) {
-            dateString = this.getIsoDataString(current);
+            dateString = current.toISOString().split('T')[0];
             item = this.getItem(dateString, trackersList);
 
             if (item !== null) {
                 result.push(item);
             } else {
                 result.push({
-                    id: id,
+                    id: id, // assuming that ids are going in natural order
                     hits: 0,
                     date: dateString
                 });
             }
 
-            const newDate = current.setDate(current.getDate() + 1);
+            newDate = current.setDate(current.getDate() + 1);
             current = new Date(newDate);
             id++;
         }
 
         return result;
-    }
-
-    // helper function to build ISO-8601 string
-    private getIsoDataString(date: Date): string {
-        const day: string = ('0' + date.getDate()).slice(-2);
-        const month: string = ('0' + (date.getMonth() + 1)).slice(-2);
-        const year: number = date.getFullYear();
-
-        return `${year}-${month}-${day}`;
     }
 
     // helper function to find tracker obj by date if any
