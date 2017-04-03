@@ -1,7 +1,39 @@
+<h1>Post details</h1>
+
 <button class="btn btn-default" type="submit" [routerLink]="['/']">Back</button>
+
 <pre>
 {{ postDetail | json }}
 </pre>
+
+<form [formGroup]="rangeForm" class="row" novalidate>
+
+<!-- TODO: add input debounce or normal datepicker plugin -->
+    <div class="form-group col-xs-6">
+        <label>From:</label>
+        <input formControlName="from"
+            placeholder="YYYY-MM-DD"
+            class="form-control"
+            type="text">
+    </div>
+    <div class="form-group col-xs-6">
+        <label>To:</label>
+        <input formControlName="to"
+            placeholder="YYYY-MM-DD"
+            class="form-control"
+            type="text">
+    </div>
+
+    <p class="text-danger" *ngIf="rangeForm.controls.to.hasError('pattern')
+        || rangeForm.controls.from.hasError('pattern')">
+        Please enter a valid date in YYYY-MM-DD format.
+    </p>
+    <p class="text-danger" *ngIf="rangeForm.controls.to.hasError('required')
+        || rangeForm.controls.from.hasError('required')">
+        Both dates are mandatory
+    </p>
+
+</form>
 
 <pre>
 {{ trackersList | json }}

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -16,8 +17,13 @@ import { Tracker } from '../tracker.model';
 export class PostDetailComponent implements OnInit, OnDestroy {
     postDetail: Post[] = [];
     trackersList: Tracker[] = [];
-    from: string = '01-01-2015';
-    to: string = '03-01-2015';
+    from: string = '2015-01-01';
+    to: string = '2015-03-01';
+
+    rangeForm: FormGroup;
+
+    // checks valid days and months, does not check leap year
+    private isoDatePattern: RegExp = /^(19|20)\d\d-(02-(0[1-9]|[12]\d)|(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(0[469]|11)-(0[1-9]|[12][0-9]|30))$/;
 
     private paramsSubscription: Subscription;
     private postsDetailSubscription: Subscription;
@@ -30,6 +36,24 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.rangeForm = new FormGroup({
+            from: new FormControl( this.from, [
+                Validators.required,
+                Validators.pattern(this.isoDatePattern)
+            ]),
+            to: new FormControl( this.to, [
+                Validators.required,
+                Validators.pattern(this.isoDatePattern)
+            ])
+        });
+
+        this.rangeForm.valueChanges
+             .subscribe(data => {
+                 if (this.rangeForm.valid) {
+                     this.getTrackers(data.from, data.to);
+                 }
+             });
+
         if (!this.paramsSubscription) {
             this.paramsSubscription = this.route.params
             .subscribe(params => {
@@ -59,10 +83,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     }
 
     getTrackers(from: string, to: string) {
-        if (!this.trackersSubscription) {
-            this.trackersSubscription = this.trackerService.getTrackers(from, to)
-                .subscribe( data => this.trackersList = data );
+        if (this.trackersSubscription) {
+            this.trackersSubscription.unsubscribe();
         }
+
+        this.trackersSubscription = this.trackerService.getTrackers(from, to)
+            .subscribe( data => this.trackersList = data );
     }
 
 }
