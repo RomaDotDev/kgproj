@@ -12,6 +12,7 @@ import { Post } from '../post.model';
 
 export class PostListComponent implements OnInit, OnDestroy {
     postsList: Post[] = [];
+    postsLoading: boolean = false;
 
     private postsListSubscription: Subscription;
 
@@ -28,10 +29,17 @@ export class PostListComponent implements OnInit, OnDestroy {
         }
     }
 
+    // TODO: data fetch error handling
+
     getPostsList() {
+        // TODO: pagination
         if (!this.postsListSubscription) {
+            this.postsLoading = true;
             this.postsListSubscription = this.postService.getAllPosts()
-                .subscribe( data => this.postsList = data );
+                .subscribe( data => {
+                    this.postsList = data;
+                    this.postsLoading = false;
+                });
         }
     }
 }

@@ -1,6 +1,8 @@
 <h1>Posts</h1>
 
-<div class="list-group">
+<ng-container *ngIf="postsLoading">Loading trackers...</ng-container>
+
+<div class="list-group" *ngIf="!postsLoading">
     <a *ngFor="let post of postsList" class="list-group-item" [routerLink]="['/', post.id]">
       {{ post.id }} {{ post.title }}
     </a>

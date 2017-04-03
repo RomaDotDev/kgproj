@@ -21,6 +21,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     to: string = '2015-03-01';
 
     rangeForm: FormGroup;
+    isDetailLoading: boolean = false;
+    isTrackerLoading: boolean = false;
 
     // checks valid days and months, does not check leap year
     private isoDatePattern: RegExp = /^(19|20)\d\d-(02-(0[1-9]|[12]\d)|(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(0[469]|11)-(0[1-9]|[12][0-9]|30))$/;
@@ -75,10 +77,16 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         }
     }
 
+    // TODO: data fetch error handling
+
     getPostsDetail(id: number) {
         if (!this.postsDetailSubscription) {
+            this.isDetailLoading = true;
             this.postsDetailSubscription = this.postService.getPost(id)
-                .subscribe( data => this.postDetail = data );
+                .subscribe( data => {
+                    this.postDetail = data;
+                    this.isDetailLoading = false;
+                } );
         }
     }
 
@@ -87,8 +95,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
             this.trackersSubscription.unsubscribe();
         }
 
+        this.isTrackerLoading = true;
         this.trackersSubscription = this.trackerService.getTrackers(from, to)
-            .subscribe( data => this.trackersList = data );
+            .subscribe( data => {
+                this.trackersList = data;
+                this.isTrackerLoading = false;
+            } );
     }
 
 }
